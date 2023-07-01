@@ -16,7 +16,7 @@
   email: {
     smtp_server: "smtp-relay.sendinblue.com"
     smtp_login: "kenwyn87@gmail.com"
-    smtp_password: "xsmtpsib-50ca5bdaed8d1811ce783dfb76875b5ac19657039b1d7e495357dba206db8cef-BsOZY8PhC2W5nzbL"
+    smtp_password: "invalid key"
     smtp_from_address: "noreply@forum.basedcount.com"
     tls_type: "none"
   }
