@@ -303,6 +303,16 @@ diesel::table! {
 }
 
 diesel::table! {
+    flairs (id) {
+        id -> Int4,
+        #[max_length = 255]
+        name -> Nullable<Varchar>,
+        community_id -> Nullable<Int4>,
+        created_on -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
     instance (id) {
         id -> Int4,
         #[max_length = 255]
@@ -834,32 +844,14 @@ diesel::table! {
     }
 }
 
-// Custom
 diesel::table! {
-    flair (id) {
+    user_flairs (id) {
         id -> Int4,
-        name -> Text,
-        image -> Nullable<Text>,
-        published -> Timestamp,
-        updated -> Nullable<Timestamp>,
+        flair_id -> Nullable<Int4>,
+        community_id -> Nullable<Int4>,
+        created_on -> Nullable<Timestamp>,
     }
 }
-
-diesel::table! {
-    user_flair (id) {
-        id -> Int4,
-        flair_id -> Int4,
-        person_id -> Int4,
-        community_id -> Int4,
-    }
-}
-
-// Flairs
-diesel::joinable!(user_flair -> flair (flair_id));
-diesel::joinable!(user_flair -> person (person_id));
-diesel::joinable!(user_flair -> community (community_id));
-
-
 
 diesel::joinable!(admin_purge_comment -> person (admin_person_id));
 diesel::joinable!(admin_purge_comment -> post (post_id));
@@ -896,6 +888,7 @@ diesel::joinable!(custom_emoji_keyword -> custom_emoji (custom_emoji_id));
 diesel::joinable!(email_verification -> local_user (local_user_id));
 diesel::joinable!(federation_allowlist -> instance (instance_id));
 diesel::joinable!(federation_blocklist -> instance (instance_id));
+diesel::joinable!(flairs -> community (community_id));
 diesel::joinable!(local_site -> site (site_id));
 diesel::joinable!(local_site_rate_limit -> local_site (local_site_id));
 diesel::joinable!(local_user -> person (person_id));
@@ -943,6 +936,8 @@ diesel::joinable!(site_aggregates -> site (site_id));
 diesel::joinable!(site_language -> language (language_id));
 diesel::joinable!(site_language -> site (site_id));
 diesel::joinable!(tagline -> local_site (local_site_id));
+diesel::joinable!(user_flairs -> community (community_id));
+diesel::joinable!(user_flairs -> flairs (flair_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
     activity,
@@ -969,6 +964,7 @@ diesel::allow_tables_to_appear_in_same_query!(
     email_verification,
     federation_allowlist,
     federation_blocklist,
+    flairs,
     instance,
     language,
     local_site,
@@ -1008,4 +1004,5 @@ diesel::allow_tables_to_appear_in_same_query!(
     site_aggregates,
     site_language,
     tagline,
+    user_flairs,
 );
