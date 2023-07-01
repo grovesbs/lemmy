@@ -31,3 +31,4 @@ bindings
 dev_pgdata/
 *.PGSQL.*
 .env
+dev/

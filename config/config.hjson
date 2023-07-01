@@ -1,5 +1,23 @@
 # See the documentation for available config fields and descriptions:
 # https://join-lemmy.org/docs/en/administration/configuration.html
 {
-  hostname: lemmy-alpha
+  # for more info about the config, check out the documentation
+  # https://join-lemmy.org/docs/en/administration/configuration.html
+
+  database: {
+    host: postgres
+    password: "Nj4aFCmublWmSm8cQ9Ul"
+  }
+  hostname: "forum.basedcount.com"
+  pictrs: {
+    url: "http://pictrs:8080/"
+    api_key: "Nj4aFCmublWmSm8cQ9Ul"
+  }
+  email: {
+    smtp_server: "smtp-relay.sendinblue.com"
+    smtp_login: "kenwyn87@gmail.com"
+    smtp_password: "xsmtpsib-50ca5bdaed8d1811ce783dfb76875b5ac19657039b1d7e495357dba206db8cef-BsOZY8PhC2W5nzbL"
+    smtp_from_address: "noreply@forum.basedcount.com"
+    tls_type: "none"
+  }
 }
