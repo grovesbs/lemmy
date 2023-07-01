@@ -143,3 +143,4 @@ futures-util = { workspace = true }
 tokio-postgres = { workspace = true }
 tokio-postgres-rustls = { workspace = true }
 chrono = { workspace = true }
+dotenv = "0.15.0"

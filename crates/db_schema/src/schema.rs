@@ -834,6 +834,33 @@ diesel::table! {
     }
 }
 
+// Custom
+diesel::table! {
+    flair (id) {
+        id -> Int4,
+        name -> Text,
+        image -> Nullable<Text>,
+        published -> Timestamp,
+        updated -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    user_flair (id) {
+        id -> Int4,
+        flair_id -> Int4,
+        person_id -> Int4,
+        community_id -> Int4,
+    }
+}
+
+// Flairs
+diesel::joinable!(user_flair -> flair (flair_id));
+diesel::joinable!(user_flair -> person (person_id));
+diesel::joinable!(user_flair -> community (community_id));
+
+
+
 diesel::joinable!(admin_purge_comment -> person (admin_person_id));
 diesel::joinable!(admin_purge_comment -> post (post_id));
 diesel::joinable!(admin_purge_community -> person (admin_person_id));
