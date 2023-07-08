@@ -2,107 +2,45 @@ use actix_web::{guard, web, Error, HttpResponse, Result};
 use lemmy_api::Perform;
 use lemmy_api_common::{
   comment::{
-    CreateComment,
-    CreateCommentLike,
-    CreateCommentReport,
-    DeleteComment,
-    DistinguishComment,
-    EditComment,
-    GetComment,
-    GetComments,
-    ListCommentReports,
-    RemoveComment,
-    ResolveCommentReport,
+    CreateComment, CreateCommentLike, CreateCommentReport, DeleteComment, DistinguishComment,
+    EditComment, GetComment, GetComments, ListCommentReports, RemoveComment, ResolveCommentReport,
     SaveComment,
   },
   community::{
-    AddModToCommunity,
-    BanFromCommunity,
-    BlockCommunity,
-    CreateCommunity,
-    DeleteCommunity,
-    EditCommunity,
-    FollowCommunity,
-    GetCommunity,
-    HideCommunity,
-    ListCommunities,
-    RemoveCommunity,
+    AddModToCommunity, BanFromCommunity, BlockCommunity, CreateCommunity, DeleteCommunity,
+    EditCommunity, FollowCommunity, GetCommunity, HideCommunity, ListCommunities, RemoveCommunity,
     TransferCommunity,
   },
   context::LemmyContext,
   custom_emoji::{CreateCustomEmoji, DeleteCustomEmoji, EditCustomEmoji},
   person::{
-    AddAdmin,
-    BanPerson,
-    BlockPerson,
-    ChangePassword,
-    DeleteAccount,
-    GetBannedPersons,
-    GetCaptcha,
-    GetPersonDetails,
-    GetPersonMentions,
-    GetReplies,
-    GetReportCount,
-    GetUnreadCount,
-    Login,
-    MarkAllAsRead,
-    MarkCommentReplyAsRead,
-    MarkPersonMentionAsRead,
-    PasswordChangeAfterReset,
-    PasswordReset,
-    Register,
-    SaveUserSettings,
-    VerifyEmail,
+    AddAdmin, BanPerson, BlockPerson, ChangePassword, DeleteAccount, GetBannedPersons, GetCaptcha,
+    GetPersonDetails, GetPersonMentions, GetReplies, GetReportCount, GetUnreadCount, Login,
+    MarkAllAsRead, MarkCommentReplyAsRead, MarkPersonMentionAsRead, PasswordChangeAfterReset,
+    PasswordReset, Register, SaveUserSettings, VerifyEmail,
   },
   post::{
-    CreatePost,
-    CreatePostLike,
-    CreatePostReport,
-    DeletePost,
-    EditPost,
-    FeaturePost,
-    GetPost,
-    GetPosts,
-    GetSiteMetadata,
-    ListPostReports,
-    LockPost,
-    MarkPostAsRead,
-    RemovePost,
-    ResolvePostReport,
-    SavePost,
+    CreatePost, CreatePostLike, CreatePostReport, DeletePost, EditPost, FeaturePost, GetPost,
+    GetPosts, GetSiteMetadata, ListPostReports, LockPost, MarkPostAsRead, RemovePost,
+    ResolvePostReport, SavePost,
   },
   private_message::{
-    CreatePrivateMessage,
-    CreatePrivateMessageReport,
-    DeletePrivateMessage,
-    EditPrivateMessage,
-    GetPrivateMessages,
-    ListPrivateMessageReports,
-    MarkPrivateMessageAsRead,
+    CreatePrivateMessage, CreatePrivateMessageReport, DeletePrivateMessage, EditPrivateMessage,
+    GetPrivateMessages, ListPrivateMessageReports, MarkPrivateMessageAsRead,
     ResolvePrivateMessageReport,
   },
   site::{
-    ApproveRegistrationApplication,
-    CreateSite,
-    EditSite,
-    GetFederatedInstances,
-    GetModlog,
-    GetSite,
-    GetUnreadRegistrationApplicationCount,
-    LeaveAdmin,
-    ListRegistrationApplications,
-    PurgeComment,
-    PurgeCommunity,
-    PurgePerson,
-    PurgePost,
-    ResolveObject,
-    Search,
-  },
+    ApproveRegistrationApplication, CreateSite, EditSite, GetFederatedInstances, GetModlog,
+    GetSite, GetUnreadRegistrationApplicationCount, LeaveAdmin, ListRegistrationApplications,
+    PurgeComment, PurgeCommunity, PurgePerson, PurgePost, ResolveObject, Search,
+  }, lemmy_db_views,
 };
 use lemmy_api_crud::PerformCrud;
 use lemmy_apub::{api::PerformApub, SendActivity};
 use lemmy_utils::rate_limit::RateLimitCell;
 use serde::Deserialize;
+
+
 
 pub fn config(cfg: &mut web::ServiceConfig, rate_limit: &RateLimitCell) {
   cfg.service(
@@ -199,6 +137,12 @@ pub fn config(cfg: &mut web::ServiceConfig, rate_limit: &RateLimitCell) {
             "/site_metadata",
             web::get().to(route_get::<GetSiteMetadata>),
           ),
+      )
+      // Flairs
+      .service(
+        web::scope("/flair")
+          .wrap(rate_limit.message())
+          .route("/user", web::get().to(lemmy_api_common::get_user_flair))
       )
       // Comment
       .service(

@@ -14,6 +14,7 @@ pub mod sensitive;
 pub mod site;
 #[cfg(feature = "full")]
 pub mod utils;
+pub mod flairs;
 
 pub extern crate lemmy_db_schema;
 pub extern crate lemmy_db_views;
