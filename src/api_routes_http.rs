@@ -33,13 +33,13 @@ use lemmy_api_common::{
     ApproveRegistrationApplication, CreateSite, EditSite, GetFederatedInstances, GetModlog,
     GetSite, GetUnreadRegistrationApplicationCount, LeaveAdmin, ListRegistrationApplications,
     PurgeComment, PurgeCommunity, PurgePerson, PurgePost, ResolveObject, Search,
-  }, lemmy_db_views,
+  },
 };
 use lemmy_api_crud::PerformCrud;
 use lemmy_apub::{api::PerformApub, SendActivity};
 use lemmy_utils::rate_limit::RateLimitCell;
 use serde::Deserialize;
-
+use lemmy_api_common::flairs;
 
 
 pub fn config(cfg: &mut web::ServiceConfig, rate_limit: &RateLimitCell) {
@@ -142,7 +142,7 @@ pub fn config(cfg: &mut web::ServiceConfig, rate_limit: &RateLimitCell) {
       .service(
         web::scope("/flair")
           .wrap(rate_limit.message())
-          .route("/user", web::get().to(lemmy_api_common::get_user_flair))
+          .route("/user", web::get().to(flairs::get_user_flair))
       )
       // Comment
       .service(
